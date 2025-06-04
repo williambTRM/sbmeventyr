@@ -398,14 +398,14 @@
         },
         FRITT_LANDSKAP: {
             name: "Fritt Landskap",
-            emoji: "🌳",
-            description: "Plass til utvikling! Fjerner 5 tilfeldige brikker fra brettet.",
+            emoji: "💼",
+            description: "Finn deg en plass! Fjerner 5 tilfeldige brikker fra brettet.",
             id: "FRITT_LANDSKAP"
         },
         BUSSTOPP: {
             name: "Busstopp",
             emoji: "🚏",
-            description: "Ekspressrute! Gir deg +2 ekstra trekk.",
+            description: "Ekspressrute! Gir deg +5 ekstra trekk.",
             id: "BUSSTOPP"
         },
         ADGANGS_APP: {
@@ -1291,8 +1291,8 @@
     }
 
     function applyBusstopp() { 
-        movesLeft += 2;
-        showModal("Busstopp Brukt!", "Ekspressrute ga +2 trekk!");
+        movesLeft += 5;
+        showModal("Busstopp Brukt!", "Ekspressrute ga +5 trekk!");
         updateUI();
         checkGameStatus();
     }
