@@ -30,7 +30,7 @@
              justify-content: center;
              padding: 1rem;
              box-sizing: border-box;
-             overflow-y: auto;
+             /* overflow-y: auto; /* Removed from here, will be on .menu-content */
              background-color: rgba(8, 48, 65, 0.8); 
              backdrop-filter: blur(5px);
              -webkit-backdrop-filter: blur(5px);
@@ -41,9 +41,13 @@
             padding: 1.5rem;
             border-radius: 0.75rem;
             box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
-            width: 91.666667%; 
-            max-width: 28rem; 
+            width: 91.666667%; /* w-11/12 */
+            max-width: 28rem; /* max-w-md */
             text-align: center;
+            max-height: 85vh; /* Allow content to take up to 85% of viewport height */
+            overflow-y: auto; /* Make this box scrollable if its content overflows */
+            display: flex; 
+            flex-direction: column; 
         }
 
         #game-container-wrapper {
@@ -246,18 +250,18 @@
     </div>
 
     <div id="level-select-screen" class="hidden">
-        <div class="menu-content space-y-3">
+        <div class="menu-content space-y-3"> <!-- This .menu-content will now scroll -->
             <h2 class="text-2xl font-bold text-white mb-4">Velg Nivå</h2>
             <div id="level-buttons-container" class="grid grid-cols-2 sm:grid-cols-3 gap-3"></div>
-            <button id="back-to-menu-from-levels-btn" class="btn-secondary mt-4 w-full">Tilbake til Hovedmeny</button>
+            <button id="back-to-menu-from-levels-btn" class="btn-secondary mt-4 w-full flex-shrink-0">Tilbake til Hovedmeny</button> <!-- flex-shrink-0 for back button -->
         </div>
     </div>
 
     <div id="bonus-level-select-screen" class="hidden">
-        <div class="menu-content space-y-3">
+        <div class="menu-content space-y-3"> <!-- This .menu-content will now scroll -->
             <h2 class="text-2xl font-bold text-white mb-4">Velg Bonusnivå</h2>
             <div id="bonus-level-buttons-container" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
-            <button id="back-to-menu-from-bonus-levels-btn" class="btn-secondary mt-4 w-full">Tilbake til Hovedmeny</button>
+            <button id="back-to-menu-from-bonus-levels-btn" class="btn-secondary mt-4 w-full flex-shrink-0">Tilbake til Hovedmeny</button> <!-- flex-shrink-0 for back button -->
         </div>
     </div>
 
@@ -388,7 +392,7 @@
     const BONUS_POWER_UPS = {
         FLYTTEESKE: {
             name: "Flytteeske",
-            emoji: "📦",
+            emoji: "�",
             description: "Nytt inventar! Forvandler 5 tilfeldige brikker til andre brikketyper.",
             id: "FLYTTEESKE"
         },
@@ -415,34 +419,33 @@
     const MOVES_FOR_POWER_UP = 5; 
     const MAX_EARNED_POWER_UPS = 3;
 
-    // Adjusted LOCATIONS for emoji variety and difficulty
     const LOCATIONS = [
-        { name: "Oslo", targetScore: 500, maxMoves: 25, emojis: ['🏦', '💰', '📈', '🎓', '🌉'] }, // 5 emojis
-        { name: "Kristiansund", targetScore: 700, maxMoves: 24, emojis: ['🚢', '🎣', '🏦', '💰', '⛰️'] }, // 5 emojis
-        { name: "Tingvoll", targetScore: 900, maxMoves: 23, emojis: ['⛰️', '🎣', '🌹', '🏦', '⚙️'] }, // 5 emojis
-        { name: "Hustadvika", targetScore: 1100, maxMoves: 22, emojis: ['🚢', '🎣', '⛰️', '⚙️', '🌉'] }, // 5 emojis
-        { name: "Molde", targetScore: 1300, maxMoves: 22, emojis: ['🌹', '🏦', '🚢', '⛰️', '🎓'] }, // 5 emojis
-        { name: "Åndalsnes - Rauma", targetScore: 1500, maxMoves: 21, emojis: ['⛰️', '🚠', '🚢', '🌉', '📈'] }, // 5 emojis
-        { name: "Vestnes", targetScore: 1700, maxMoves: 20, emojis: ['🚢', '⚙️', '🌉', '🏦', '⛰️', '💰'] }, // 6 emojis
-        { name: "Aukra", targetScore: 1900, maxMoves: 20, emojis: ['⚙️', '🚢', '🎣', '🏦', '💰', '🌹'] }, // 6 emojis
-        { name: "Midsund", targetScore: 2100, maxMoves: 19, emojis: ['⛰️', '🎣', '🚢', '🚠', '🏦', '🎓'] }, // 6 emojis
-        { name: "Harøy", targetScore: 2300, maxMoves: 19, emojis: ['🎣', '🚢', '⛰️', '🏦', '⚙️', '🌉'] }, // 6 emojis
-        { name: "Stranda", targetScore: 2500, maxMoves: 18, emojis: ['⛰️', '🚠', '🚢', '⚙️', '💰', '🌹'] }, // 6 emojis
-        { name: "Valldal", targetScore: 2700, maxMoves: 18, emojis: ['🌹', '⛰️', '🚢', '🚠', '📈', '🎣'] }, // 6 emojis
-        { name: "Sykkylven", targetScore: 2900, maxMoves: 17, emojis: ['🛋️', '⚙️', '⛰️', '🏦', '💰', '📈'] }, // 6 emojis
-        { name: "Volda", targetScore: 3100, maxMoves: 17, emojis: ['🎓', '🚢', '⛰️', '🎣', '🏦', '🌉', '🌹'] }, // 7 emojis
-        { name: "Ørsta", targetScore: 3300, maxMoves: 20, emojis: ['⛰️', '⚙️', '🚠', '🎣', '🏦', '🚢', '💰'] }, // 7 emojis
-        { name: "Larsnes - Sande", targetScore: 3500, maxMoves: 20, emojis: ['🚢', '⚙️', '🎣', '🌉', '🏦', '💰', '🛋️'] }, // 7 emojis
-        { name: "Fiskå - Vanylven", targetScore: 3700, maxMoves: 22, emojis: ['🎣', '🚢', '⛰️', '⚙️', '🏦', '🌉', '🚠'] }, // 7 emojis
-        { name: "Fosnavåg - Herøy", targetScore: 3900, maxMoves: 22, emojis: ['🚢', '🎣', '⚙️', '💰', '🌉', '📈', '🎓'] }, // 7 emojis
-        { name: "Ulsteinvik", targetScore: 4100, maxMoves: 23, emojis: ['⚙️', '🚢', '🌉', '💰', '📈', '🏦', '🎣'] }, // 7 emojis
-        { name: "Hareid", targetScore: 4300, maxMoves: 23, emojis: ['🚢', '🌉', '⛰️', '🎣', '🏦', '⚙️', '💰'] }, // 7 emojis
-        { name: "Brattvåg", targetScore: 4500, maxMoves: 24, emojis: ['⚙️', '🚢', '🎣', '🏦', '💰', '🌉', '⛰️'] }, // 7 emojis
-        { name: "Langevåg", targetScore: 4700, maxMoves: 24, emojis: ['⛰️', '🚢', '⚙️', '🌉', '🏦', '💰', '📈'] }, // 7 emojis
-        { name: "Valderøya - Giske", targetScore: 4900, maxMoves: 25, emojis: ['🚢', '🌉', '🎣', '⛰️', '💰', '📈', '🏦', '🚠'] }, // 8 emojis
-        { name: "Digernes", targetScore: 5100, maxMoves: 25, emojis: ['⚙️', '📈', '🏦', '💰', '🌉', '🛋️', '🚢', '🌹'] }, // 8 emojis
-        { name: "Spjelkavik", targetScore: 5300, maxMoves: 26, emojis: ['🏦', '💰', '📈', '⚙️', '🛋️', '🌉', '🚢', '⛰️'] }, // 8 emojis
-        { name: "Ålesund sentrum", targetScore: 5800, maxMoves: 28, emojis: ['🏦', '🚢', '🎣', '🌉', '🌹', '💰', '📈', '🎓', '⛰️'] } // 9 emojis
+        { name: "Oslo", targetScore: 500, maxMoves: 25, emojis: ['🏦', '💰', '📈', '🎓', '🌉'] }, 
+        { name: "Kristiansund", targetScore: 700, maxMoves: 24, emojis: ['🚢', '🎣', '🏦', '💰', '⛰️'] }, 
+        { name: "Tingvoll", targetScore: 900, maxMoves: 23, emojis: ['⛰️', '🎣', '🌹', '🏦', '⚙️'] }, 
+        { name: "Hustadvika", targetScore: 1100, maxMoves: 22, emojis: ['🚢', '🎣', '⛰️', '⚙️', '🌉'] }, 
+        { name: "Molde", targetScore: 1300, maxMoves: 22, emojis: ['🌹', '🏦', '🚢', '⛰️', '🎓'] }, 
+        { name: "Åndalsnes - Rauma", targetScore: 1500, maxMoves: 21, emojis: ['⛰️', '🚠', '🚢', '🌉', '📈'] }, 
+        { name: "Vestnes", targetScore: 1700, maxMoves: 20, emojis: ['🚢', '⚙️', '🌉', '🏦', '⛰️', '💰'] }, 
+        { name: "Aukra", targetScore: 1900, maxMoves: 20, emojis: ['⚙️', '🚢', '🎣', '🏦', '💰', '🌹'] }, 
+        { name: "Midsund", targetScore: 2100, maxMoves: 19, emojis: ['⛰️', '🎣', '🚢', '🚠', '🏦', '🎓'] }, 
+        { name: "Harøy", targetScore: 2300, maxMoves: 19, emojis: ['🎣', '🚢', '⛰️', '🏦', '⚙️', '🌉'] }, 
+        { name: "Stranda", targetScore: 2500, maxMoves: 18, emojis: ['⛰️', '🚠', '🚢', '⚙️', '💰', '🌹'] }, 
+        { name: "Valldal", targetScore: 2700, maxMoves: 18, emojis: ['🌹', '⛰️', '🚢', '🚠', '📈', '🎣'] }, 
+        { name: "Sykkylven", targetScore: 2900, maxMoves: 17, emojis: ['🛋️', '⚙️', '⛰️', '🏦', '💰', '📈'] }, 
+        { name: "Volda", targetScore: 3100, maxMoves: 17, emojis: ['🎓', '🚢', '⛰️', '🎣', '🏦', '🌉', '🌹'] }, 
+        { name: "Ørsta", targetScore: 3300, maxMoves: 20, emojis: ['⛰️', '⚙️', '🚠', '🎣', '🏦', '🚢', '💰'] }, 
+        { name: "Larsnes - Sande", targetScore: 3500, maxMoves: 20, emojis: ['🚢', '⚙️', '🎣', '🌉', '🏦', '💰', '🛋️'] }, 
+        { name: "Fiskå - Vanylven", targetScore: 3700, maxMoves: 22, emojis: ['🎣', '🚢', '⛰️', '⚙️', '🏦', '🌉', '🚠'] }, 
+        { name: "Fosnavåg - Herøy", targetScore: 3900, maxMoves: 22, emojis: ['🚢', '🎣', '⚙️', '💰', '🌉', '📈', '🎓'] }, 
+        { name: "Ulsteinvik", targetScore: 4100, maxMoves: 23, emojis: ['⚙️', '🚢', '🌉', '💰', '📈', '🏦', '🎣'] }, 
+        { name: "Hareid", targetScore: 4300, maxMoves: 23, emojis: ['🚢', '🌉', '⛰️', '🎣', '🏦', '⚙️', '💰'] }, 
+        { name: "Brattvåg", targetScore: 4500, maxMoves: 24, emojis: ['⚙️', '🚢', '🎣', '🏦', '💰', '🌉', '⛰️'] }, 
+        { name: "Langevåg", targetScore: 4700, maxMoves: 24, emojis: ['⛰️', '🚢', '⚙️', '🌉', '🏦', '💰', '📈'] }, 
+        { name: "Valderøya - Giske", targetScore: 4900, maxMoves: 25, emojis: ['🚢', '🌉', '🎣', '⛰️', '💰', '📈', '🏦', '🚠'] }, 
+        { name: "Digernes", targetScore: 5100, maxMoves: 25, emojis: ['⚙️', '📈', '🏦', '💰', '🌉', '🛋️', '🚢', '🌹'] }, 
+        { name: "Spjelkavik", targetScore: 5300, maxMoves: 26, emojis: ['🏦', '💰', '📈', '⚙️', '🛋️', '🌉', '🚢', '⛰️'] }, 
+        { name: "Ålesund sentrum", targetScore: 5800, maxMoves: 28, emojis: ['🏦', '🚢', '🎣', '🌉', '🌹', '💰', '📈', '🎓', '⛰️'] } 
     ];
     const BONUS_LOCATIONS = [
         { name: "PIR", targetScore: 3000, maxMoves: 18, emojis: PIECE_TYPES.slice(0, 7) },
@@ -1463,7 +1466,7 @@
                 const pu = UNLOCKABLE_NORMAL_POWER_UPS[key];
                 if (levelNumber === pu.unlockLevel && !unlockedNormalPowerUpIDs.includes(pu.id)) {
                     levelStartMessage += `<br><br>Fullfør dette nivået for å låse opp ${pu.emoji} ${pu.name}!`;
-                    modalTitle += ` ${pu.emoji}`;
+                    // modalTitle += ` ${pu.emoji}`; // Removed emoji from modal title
                 }
             });
         }
@@ -1484,7 +1487,10 @@
         LOCATIONS.forEach((level, index) => {
             const btn = document.createElement('button');
             btn.classList.add('btn-secondary', 'p-3', 'rounded-lg', 'text-center', 'text-sm', 'w-full', 'relative'); 
-            btn.textContent = `${index + 1}. ${level.name}`;
+            
+            let buttonTextContent = `${index + 1}. ${level.name}`;
+            btn.textContent = buttonTextContent;
+
 
             const levelNumber = index + 1;
             Object.keys(UNLOCKABLE_NORMAL_POWER_UPS).forEach(key => {
@@ -1503,9 +1509,9 @@
                 btn.disabled = true;
                 btn.classList.add('opacity-50', 'cursor-not-allowed');
                 
-                const currentText = btn.textContent; 
-                btn.innerHTML = ""; 
-                const textNode = document.createTextNode(currentText);
+                // Ensure (Låst) is added after text and potential icon
+                btn.innerHTML = ""; // Clear
+                const textNode = document.createTextNode(buttonTextContent);
                 btn.appendChild(textNode);
 
                  Object.keys(UNLOCKABLE_NORMAL_POWER_UPS).forEach(key => { 
@@ -1517,7 +1523,8 @@
                          btn.appendChild(iconSpan);
                     }
                 });
-                btn.innerHTML += ' (Låst)'; 
+                const lockedTextNode = document.createTextNode(' (Låst)');
+                btn.appendChild(lockedTextNode);
             }
             levelButtonsContainerEl.appendChild(btn);
         });
